@@ -8,7 +8,6 @@ Make sure you have the PCS app key . if you haven\'t , you can use the demo key 
 It will exprire some time. who knows ? so the best way is to request for your own key.
 There are a demo key from Baidu : L6g70tBRRIXLsY0Z3HwKqlRE
 So if you dont have the app secret , you have to re-init every month , for the access-token will expires every month.
-* Now the script cannot work if you dont know the app secret , but it will works in the next versions.
 
 EOF;
 		echo 'App KEY [L6g70tBRRIXLsY0Z3HwKqlRE] :';

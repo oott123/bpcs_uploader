@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/usr/bin/php -d disable_functions -d safe_mode=Off 
 <?php
 	/*
 		百度PCS上传php脚本 by oott123
