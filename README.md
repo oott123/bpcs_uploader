@@ -67,7 +67,7 @@ Linux (or cygwin) with php & curl installed.
 > 3.get the access_token from it , paste it and press Enter.  
 > access_token[] :   
 
-第四步，获取access token。在浏览器中打开上述URL（https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&client_id=L6g70tBRRIXLsY0Z3HwKqlRE&redirect_uri=oob&scope=netdisk），进行授权。  
+第四步，获取access token。在浏览器中打开上述URL（ https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&client_id=L6g70tBRRIXLsY0Z3HwKqlRE&redirect_uri=oob&scope=netdisk ），进行授权。  
 授权完毕后，将会跳到一个写着“百度 Oauth2.0”的页面。复制出其中的网页URL，找到access_token=和&之间的字符串，例如：
 `3.**05c2ea85d52c2***************a5.2592000.136***9032.3089166538-23**47`  
 将其复制到shell中粘贴并回车。使用这种方式初始化的用户，需要每月重新初始化。  
@@ -78,7 +78,7 @@ Linux (or cygwin) with php & curl installed.
 > Copy or input 12abcxyz when it been asks.  
 > After granted the access to the application , be back and press Enter key .  
 
-来到这里，打开浏览器访问https://openapi.baidu.com/device，在“请输入设备上显示的用户授权码：”文本框中输入上面显示的授权码（这里是`12abcxyz`），并点击继续。
+来到这里，打开浏览器访问 https://openapi.baidu.com/device ，在“请输入设备上显示的用户授权码：”文本框中输入上面显示的授权码（这里是`12abcxyz`），并点击继续。
 看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即可继续。  
 
 > curl -X GET -k -L "...."  
