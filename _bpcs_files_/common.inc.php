@@ -11,6 +11,11 @@
 			if($exitonerror){die();}
 			return false;
 		}
+		if(isset($arr['error_code'])){
+			echon('API calling error '.$arr['error_code'].' : '.$arr['error_msg']);
+			if($exitonerror){die();}
+			return false;
+		}
 		return true;
 	}
 	function continueornot(){
@@ -25,6 +30,7 @@
 	}
 	function cmd($cfe) {
 		$res = '';
+		echon($cfe);
 		if ($cfe) {
 			if(function_exists('exec')) {
 				@exec($cfe,$res);
@@ -51,6 +57,15 @@
 		}
 		return $res;
 	}
+	function do_api($url,$param,$method = 'POST'){
+		if($method == 'POST'){
+			$cmd = "curl -X POST -k -L --data \"$param\" \"$url\"";
+		}else{
+			$cmd = "curl -X $method -k -L \"$url?$param\"";
+		}
+		
+		return cmd($cmd);
+	}
 	function error_handle($errno, $errstr, $errfile, $errline){
 		switch ($errno) {
 			case E_USER_ERROR:
@@ -61,6 +76,8 @@
 			break;
 			case E_USER_NOTICE:
 				echon("Notice : $errfile ($errline) $errstr");
+			break;
+			case 8:
 			break;
 			default:
 				echon("err$errno : $errfile ($errline) $errstr");
