@@ -65,4 +65,16 @@ EOF;
 			$cmd = 'wget --no-check-certificate -O "'.$argv[2].' " "https://pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'"';
 			cmd($cmd);
 		break;
+		case 'delete':
+			//delete - 删除文件
+			if(count($argv)<2){
+				echon("Parameters unmatched.");
+				die();
+			}
+			delete_file($access_token,$argv[2]);
+			echon('Deleted.');
+		break;
+		case 'fetch':
+			//fetch - 离线下载
+			
 	}

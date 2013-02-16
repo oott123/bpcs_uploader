@@ -11,8 +11,16 @@
 			if($exitonerror){die();}
 			return false;
 		}
+		return true;
+	}
+	function apierr($arr,$exitonerror = 1){
 		if(isset($arr['error_code'])){
 			echon('API calling error '.$arr['error_code'].' : '.$arr['error_msg']);
+			if($exitonerror){die();}
+			return false;
+		}
+		if(!isset($arr['request_id'])){
+			echon('API calling faild.');
 			if($exitonerror){die();}
 			return false;
 		}

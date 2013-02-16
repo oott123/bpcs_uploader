@@ -111,7 +111,7 @@ EOF;
 	function get_quota($access_token){
 		$quota=do_api('https://pcs.baidu.com/rest/2.0/pcs/quota',"method=info&access_token=".$access_token,'GET');
 		$quota=json_decode($quota,1);
-		oaerr($quota);
+		apierr($quota);
 		return $quota;
 	}
 	function upload_file($access_token,$path,$localfile,$ondup='newcopy'){
@@ -121,6 +121,13 @@ EOF;
 		$cmd = "curl -X POST -k -L $add \"$url\"";
 		$cmd = cmd($cmd);
 		$cmd = json_decode($cmd,1);
-		oaerr($cmd);
+		apierr($cmd);
 		return $cmd;
+	}
+	function delete_file($access_token,$path){
+		$path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$path);
+		$dele=do_api('https://pcs.baidu.com/rest/2.0/pcs/file',"method=delete&access_token=".$access_token.'&path='.$path,'GET');
+		$dele=json_decode($dele,1);
+		apierr($dele);
+		return $dele;
 	}
