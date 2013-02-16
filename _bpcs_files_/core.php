@@ -131,3 +131,10 @@ EOF;
 		apierr($dele);
 		return $dele;
 	}
+	function fetch_file($access_token,$path,$url){
+		$path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$path);
+		$fetch=do_api('https://pcs.baidu.com/rest/2.0/pcs/services/cloud_dl',"method=add_task&access_token=".$access_token.'&save_path='.$path.'&source_url='.$url,'GET');
+		$fetch=json_decode($fetch,1);
+		apierr($fetch);
+		return $fetch;
+	}

@@ -39,6 +39,10 @@ EOF;
 	$access_token = file_get_contents(CONFIG_DIR.'/access_token');
 	$refresh_token = file_get_contents(CONFIG_DIR.'/refresh_token');
 	
+	if($refresh_token){
+		//若存在refresh token，则刷新它。
+	}
+	
 	switch($argv[1]){
 		case 'quota':
 			//quota - 获取空间
@@ -76,5 +80,11 @@ EOF;
 		break;
 		case 'fetch':
 			//fetch - 离线下载
-			
+			//好像需要一定的权限，无法使用。
+			if(count($argv)<3){
+				echon("Parameters unmatched.");
+				die();
+			}
+			fetch_file($access_token,$argv[2],$argv[3]);
+		break;
 	}
