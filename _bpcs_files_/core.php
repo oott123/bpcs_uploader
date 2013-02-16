@@ -108,6 +108,17 @@ EOF;
 		$access_token = getline();
 		return $access_token;
 	}
+	function do_oauth_refresh($appkey,$appsec,$refresh_token){
+		$para = 'grant_type=refresh_token&refresh_token='.$refresh_token.'&client_id='.$appkey.'&client_secret='.$appsec;
+		$token_json = do_api('https://openapi.baidu.com/oauth/2.0/token',$para);
+		$token_array = json_decode($token_json,1);
+		$access_token = $token_array['access_token'];
+		$refresh_token = $token_array['refresh_token'];
+		return array(
+			'access_token' => $access_token,
+			'refresh_token' => $refresh_token,
+		);
+	}
 	function get_quota($access_token){
 		$quota=do_api('https://pcs.baidu.com/rest/2.0/pcs/quota',"method=info&access_token=".$access_token,'GET');
 		$quota=json_decode($quota,1);

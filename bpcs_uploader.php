@@ -41,6 +41,11 @@ EOF;
 	
 	if($refresh_token){
 		//若存在refresh token，则刷新它。
+		$token_array=do_oauth_refresh(file_get_contents(CONFIG_DIR.'/appkey') , file_get_contents(CONFIG_DIR.'/appsec') , file_get_contents(CONFIG_DIR.'/refresh_token'));
+		$access_token = $token_array['access_token'];
+		$refresh_token = $token_array['refresh_token'];
+		file_put_contents(CONFIG_DIR.'/access_token',$access_token);
+		file_put_contents(CONFIG_DIR.'/refresh_token',$refresh_token);
 	}
 	
 	switch($argv[1]){
