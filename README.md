@@ -9,8 +9,8 @@ Linux (or cygwin) with php & curl installed.
 
 ## 使用方法
 
-> $ chmod +x bpcs_uploader.php  
-> $ ./bpcs_uploader.php  
+`$ chmod +x bpcs_uploader.php  
+ $ .bpcs_uploader.php`  
 
 由于VPS上安装的php可能存在于各种地方，因此运行很可能不正常。请以使用`which php`得到你的php绝对路径，修改bpcs_uploader.php的头一句#!后的路径。  
 如果你的php是为了网站环境安装的，那么很有可能你会得到下面这条错误消息：  
