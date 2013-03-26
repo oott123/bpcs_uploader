@@ -1,42 +1,49 @@
 <?php
 	//核心操作文件
 	function du_init(){
+		define('BPCSU_KEY','uFBSHEwWE6DD94SQx9z77vgG');
+		define('BPCSU_SEC','7w6wdSFsTk6Vv586r1W1ozHLoDGhXogD');
 		echo <<<EOF
 Now you have to enter your baidu PSC app key . You should know that it needs a manual acting.
 You can request for it via http://developer.baidu.com/dev#/create .
-Make sure you have the PCS app key . if you haven\'t , you can use the demo key from Baidu.
-It will exprire some time. who knows ? so the best way is to request for your own key.
-There are a demo key from Baidu : L6g70tBRRIXLsY0Z3HwKqlRE
+Make sure you have the PCS app key . if you haven\'t , you can use the demo key by just hit Enter.
 So if you dont have the app secret , you have to re-init every month , for the access-token will expires every month.
 
 EOF;
-		echo 'App KEY [L6g70tBRRIXLsY0Z3HwKqlRE] :';
+		echo 'App KEY ['.BPCSU_KEY.'] :';
 		$appkey = getline();
-		$appkey = ($appkey) ? $appkey : 'L6g70tBRRIXLsY0Z3HwKqlRE';
+		$appkey = ($appkey) ? $appkey : BPCSU_KEY;
 		file_put_contents(CONFIG_DIR.'/appkey',$appkey);
 		echon('App key has been setted to '.$appkey.' . ');
-
-		echo <<<EOF
+		if($appkey == BPCSU_KEY){
+			echon('App secret have been setted by default.');
+			$appsec=BPCSU_SEC;
+		}else{
+			echo <<<EOF
 Now you have to enter your baidu PSC app secret. If you dont know the secret , keep it blank.
 
 EOF;
-		echo 'App SECRET [] :';
-		$appsec = getline();
+			echo 'App SECRET [] :';
+			$appsec = getline();
+		}
 		file_put_contents(CONFIG_DIR.'/appsec',$appsec);
 		$prepathfile = CONFIG_DIR.'/appname';
-		echo <<<EOF
-Now you have to enter your app name. You can enter it later in the file [ $prepathfile ].
-* Why i have to enter app name ? see FAQs.
+		if($appkey == BPCSU_KEY){
+			echon('App name has been setted by default.');
+			$appname = 'bpcs_uploader';
+		}else{
+			echo <<<EOF
+Now you have to enter your app floder name. You can enter it later in the file [ $prepathfile ].
+* Why i have to enter app floder name ? see FAQs.
 If your app name have Chinese characters , please swith your client to the UTF-8 mode.
 Here are some chinese characters . Before you enter chinese characters , make sure you can read these characters.
-如果你看到这里，说明你可以直接输入文字了。
+这里是一些中文字符。
 If you cant read any chinese above , please press enter , and change it manually in the file [ $prepathfile ] .
-If you have Enter the key [L6g70tBRRIXLsY0Z3HwKqlRE] (by default) , just press Enter.
 
 EOF;
-		echo 'App Name [pcstest_oauth] : ';
-		$appname = getline();
-		$appname = ($appname) ? $appname : 'pcstest_oauth';
+			echo 'App Floder Name [] : ';
+			$appname = getline();
+		}
 		file_put_contents(CONFIG_DIR.'/appname',$appname);
 		
 		
@@ -74,10 +81,16 @@ EOF;
 			$token_para='grant_type=device_token&code=' . $device_array['device_code'] . '&client_id=' . $appkey . '&client_secret=' . $appsec;
 			$token_json = do_api('https://openapi.baidu.com/oauth/2.0/token',$token_para);
 			$token_array = json_decode($token_json,1);
-			if(oaerr($token_array,1)){
+			if(oaerr($token_array,0)){
 				break;
 			}else{
 				echon('Auth failed. please check the error message and try agian.');
+				echo <<<EOF
+Now open your broswer and visit $device_array[verification_url] . 
+Copy or input $device_array[user_code] when it been asks.
+After granted the access to the application , be back and press Y .
+
+EOF;
 				continueornot();
 				continue;
 			}
