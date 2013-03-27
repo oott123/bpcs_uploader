@@ -8,14 +8,14 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <title>bpcs uploader by oott123</title>
+    <title>bpcs_uploader by oott123</title>
   </head>
 
   <body>
 
     <header>
       <div class="container">
-        <h1>bpcs uploader</h1>
+        <h1>bpcs_uploader</h1>
         <h2>百度pcs上传脚本</h2>
 
         <section id="downloads">
@@ -28,16 +28,18 @@
 
     <div class="container">
       <section id="main_content">
-        <h2>系统要求</h2>
+        <h1>bpcs_uploader</h1>
+
+<p>百度pcs上传脚本</p>
+
+<h2>系统要求</h2>
 
 <p>Linux (or cygwin) with php &amp; curl installed.</p>
 
 <h2>使用方法</h2>
 
-<blockquote>
-<p>$ chmod +x bpcs_uploader.php<br>
-$ ./bpcs_uploader.php  </p>
-</blockquote>
+<p><code>$ chmod +x bpcs_uploader.php  
+ $ .bpcs_uploader.php</code>  </p>
 
 <p>由于VPS上安装的php可能存在于各种地方，因此运行很可能不正常。请以使用<code>which php</code>得到你的php绝对路径，修改bpcs_uploader.php的头一句#!后的路径。<br>
 如果你的php是为了网站环境安装的，那么很有可能你会得到下面这条错误消息：  </p>
@@ -47,6 +49,13 @@ $ ./bpcs_uploader.php  </p>
 </blockquote>
 
 <p>那么说明你的环境由于安全原因禁止了部分函数的执行。请看FAQs的1。请使用那条长长的命令代替./bpcs_uploader.php。eg：<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php quota</code>  </p>
+
+<h3>快速初始化</h3>
+
+<p><code>./bpcs_uploader.php quickinit</code></p>
+
+<p>敲下命令直接进入快速初始化流程，输入y，然后打开浏览器访问 <a href="https://openapi.baidu.com/device">https://openapi.baidu.com/device</a> ，在“请输入设备上显示的用户授权码：”文本框中输入上面显示的授权码（这里是<code>12abcxyz</code>），并点击继续。
+看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即完成了初始化配置。  </p>
 
 <h3>初始化</h3>
 
@@ -64,17 +73,15 @@ Continue? [y/N] y</p>
 <blockquote>
 <p>Now you have to enter your baidu PSC app key . You should know that it needs a manual acting.<br>
 You can request for it via <a href="http://developer.baidu.com/dev#/create">http://developer.baidu.com/dev#/create</a> .<br>
-Make sure you have the PCS app key . if you haven\'t , you can use the demo key from Baidu.<br>
-It will exprire some time. who knows ? so the best way is to request for your own key.<br>
-There are a demo key from Baidu : L6g70tBRRIXLsY0Z3HwKqlRE
+Make sure you have the PCS app key . if you haven't , you can use the demo key by just hit Enter. 
 So if you dont have the app secret , you have to re-init every month , for the access-token will expires every month.<br>
-App KEY [L6g70tBRRIXLsY0Z3HwKqlRE] :  </p>
+App KEY [uFBSHEwWE6DD94SQx9z77vgG] :  </p>
 </blockquote>
 
-<p>第一步，输入App key。这里需要输入一个有PCS权限的API KEY，如果没有的话直接敲回车就好了，这里会默认使用百度提供的一个demo API KEY。不过，由于百度没有公开app secret，所以只能获取一个有效期为一个月的access token。如果有一个有PSC权限的API KEY和secret，那么就能获得一个有效期为10年的refresh token，以便长期使用。</p>
+<p>第一步，输入App key。这里需要输入一个有PCS权限的API KEY，如果没有的话直接敲回车就好了，这里会默认使用内置的一组app key,app secret和app foloder name，所以只要敲下回车就能直接跳到第四步。如果你没有App secret（例如使用L6g70tBRRIXLsY0Z3HwKqlRE这个Key时），只能获取一个有效期为一个月的access token。如果有一个有PSC权限的API KEY和secret，那么就能获得一个有效期为10年的refresh token，以便长期使用。</p>
 
 <blockquote>
-<p>App key has been setted to L6g70tBRRIXLsY0Z3HwKqlRE .<br>
+<p>App key has been setted to uFBSHEwWE6DD94SQx9z77vgG .<br>
 Now you have to enter your baidu PSC app secret. If you dont know the secret , keep it blank.<br>
 App SECRET [] :  </p>
 </blockquote>
@@ -88,7 +95,7 @@ App SECRET [] :  </p>
 <li>Why i have to enter app name ? see FAQs.<br>
 If your app name have Chinese characters , please swith your client to the UTF-8 mode.<br>
 Here are some chinese characters . Before you enter chinese characters , make sure you can read these characters.<br>
-如果你看到这里，说明你可以直接输入文字了。<br>
+这里是一些中文字符。<br>
 If you cant read any chinese above , please press enter , and change it manually in the file [ /root/_bpcs_files_/config/appname ] .<br>
 If you have Enter the key <a href="by%20default">L6g70tBRRIXLsY0Z3HwKqlRE</a> , just press Enter.<br>
 App Name [pcstest_oauth] :<br>
@@ -96,7 +103,7 @@ App Name [pcstest_oauth] :<br>
 </ul>
 </blockquote>
 
-<p>第三步，这里需要输入app name。详情见FAQ 2。因为是使用的默认的key，所以直接回车即可。</p>
+<p>第三步，这里需要输入app floder name，也就是你申请API时填写的文件夹名字。详情见FAQ 2。因为是使用的默认的key，所以直接回车即可。</p>
 
 <blockquote>
 <p>Now you have to get your oauth access_token by your own .<br>
@@ -164,7 +171,7 @@ Have fun !  </p>
 <h3>离线下载</h3>
 
 <p><code>./bpcs_uploader.php fetch [path_remote] [path_to_fetch]</code><br>
-注：离线下载暂时无法在一般的api key授权的情况下使用，需要另外申请开通。</p>
+注：离线下载已经可以正常使用。</p>
 
 <h2>FAQs</h2>
 
@@ -172,8 +179,8 @@ Have fun !  </p>
 <li>各种错误提示<br>
 试试<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php</code>。<br>
 </li>
-<li>为什么要输入app name？<br>
-因为百度PCS的权限被限制在了/apps/appname/下。如果发现输入app name后仍然无法上传文件，请通过网页版找到【我的应用数据】找到对应的文件夹名，写入/config/appname文件。上传文件的时候会自动帮您处理文件夹，无需手动写出完整路径。</li>
+<li>为什么要输入文件夹名？<br>
+因为百度PCS的权限被限制在了/apps/文件夹名/下。如果发现输入文件夹名后仍然无法上传文件，请通过网页版找到【我的应用数据】找到对应的文件夹名，写入/config/appname文件。上传文件的时候会自动帮您处理文件夹，无需手动写出完整路径。</li>
 </ol>
       </section>
     </div>
