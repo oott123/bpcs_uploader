@@ -17,7 +17,7 @@
 	//欢迎信息
 	echo <<<EOF
 ===========================Baidu PCS Uploader===========================
-usage : $argv[0] init|quota
+usage : $argv[0] init|quickinit|quota
 usage : $argv[0] upload|download [path_local] [path_remote]
 usage : $argv[0] delete [path_remote]
 usage : $argv[0] fetch [path_remote] [path_to_fetch]
@@ -27,15 +27,14 @@ EOF;
 	if(!is_dir(CONFIG_DIR)){
 		mkdir(CONFIG_DIR);
 	}
-	if(!is_file(CONFIG_DIR.'/config.lock') || $argv[1] == 'init'){
+	if(!is_file(CONFIG_DIR.'/config.lock') || $argv[1] == 'init' || $argv[1] == 'quickinit'){
 		//进行初始化
 		echon('Now start the initiation. If you have configured the uploader , it will be overwirte. ');
 		continueornot();
-		du_init();
+		du_init($argv[1] == 'quickinit');
 		file_put_contents(CONFIG_DIR.'/config.lock',time());
 		die();
 	}
-	
 	$access_token = file_get_contents(CONFIG_DIR.'/access_token');
 	$refresh_token = file_get_contents(CONFIG_DIR.'/refresh_token');
 	

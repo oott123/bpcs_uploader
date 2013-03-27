@@ -1,38 +1,49 @@
 <?php
 	//核心操作文件
-	function du_init(){
+	function du_init($quickinit = false){
 		define('BPCSU_KEY','uFBSHEwWE6DD94SQx9z77vgG');
 		define('BPCSU_SEC','7w6wdSFsTk6Vv586r1W1ozHLoDGhXogD');
-		echo <<<EOF
+		define('BPCSU_FNAME','bpcs_uploader');
+		if($quickinit){
+			//快速初始化
+			$appkey = BPCSU_KEY;
+			file_put_contents(CONFIG_DIR.'/appkey',$appkey);
+			$appsec = BPCSU_SEC;
+			file_put_contents(CONFIG_DIR.'/appsec',$appsec);
+			$appname = BPCSU_FNAME;
+			file_put_contents(CONFIG_DIR.'/appname',$appname);
+		}else{
+			//正常初始化
+			echo <<<EOF
 Now you have to enter your baidu PSC app key . You should know that it needs a manual acting.
 You can request for it via http://developer.baidu.com/dev#/create .
 Make sure you have the PCS app key . if you haven\'t , you can use the demo key by just hit Enter.
 So if you dont have the app secret , you have to re-init every month , for the access-token will expires every month.
 
 EOF;
-		echo 'App KEY ['.BPCSU_KEY.'] :';
-		$appkey = getline();
-		$appkey = ($appkey) ? $appkey : BPCSU_KEY;
-		file_put_contents(CONFIG_DIR.'/appkey',$appkey);
-		echon('App key has been setted to '.$appkey.' . ');
-		if($appkey == BPCSU_KEY){
-			echon('App secret have been setted by default.');
-			$appsec=BPCSU_SEC;
-		}else{
-			echo <<<EOF
-Now you have to enter your baidu PSC app secret. If you dont know the secret , keep it blank.
+			echo 'App KEY ['.BPCSU_KEY.'] :';
+			$appkey = getline();
+			$appkey = ($appkey) ? $appkey : BPCSU_KEY;
+			file_put_contents(CONFIG_DIR.'/appkey',$appkey);
+			echon('App key has been setted to '.$appkey.' . ');
+			if($appkey == BPCSU_KEY){
+				echon('App secret have been setted by default.');
+				$appsec=BPCSU_SEC;
+			}else{
+				echo <<<EOF
+	Now you have to enter your baidu PSC app secret. If you dont know the secret , keep it blank.
 
-EOF;
-			echo 'App SECRET [] :';
-			$appsec = getline();
-		}
-		file_put_contents(CONFIG_DIR.'/appsec',$appsec);
-		$prepathfile = CONFIG_DIR.'/appname';
-		if($appkey == BPCSU_KEY){
-			echon('App name has been setted by default.');
-			$appname = 'bpcs_uploader';
-		}else{
-			echo <<<EOF
+	EOF;
+				echo 'App SECRET [] :';
+				$appsec = getline();
+			}
+			file_put_contents(CONFIG_DIR.'/appsec',$appsec);
+			$prepathfile = CONFIG_DIR.'/appname';
+			if($appkey == BPCSU_KEY){
+				echon('App name has been setted by default.');
+				$appname = 'bpcs_uploader';
+			}else{
+				echo <<<EOF
 Now you have to enter your app floder name. You can enter it later in the file [ $prepathfile ].
 * Why i have to enter app floder name ? see FAQs.
 If your app name have Chinese characters , please swith your client to the UTF-8 mode.
@@ -41,11 +52,11 @@ Here are some chinese characters . Before you enter chinese characters , make su
 If you cant read any chinese above , please press enter , and change it manually in the file [ $prepathfile ] .
 
 EOF;
-			echo 'App Floder Name [] : ';
-			$appname = getline();
-		}
-		file_put_contents(CONFIG_DIR.'/appname',$appname);
-		
+				echo 'App Floder Name [] : ';
+				$appname = getline();
+			}
+			file_put_contents(CONFIG_DIR.'/appname',$appname);
+		}//end of 初始化配置
 		
 		if($appsec){
 			$tokens=du_oauth_device($appkey,$appsec);
