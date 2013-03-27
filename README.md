@@ -19,6 +19,12 @@ Linux (or cygwin) with php & curl installed.
 
 那么说明你的环境由于安全原因禁止了部分函数的执行。请看FAQs的1。请使用那条长长的命令代替./bpcs_uploader.php。eg：`php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php quota`  
 
+### 快速初始化
+`./bpcs_uploader.php quickinit`
+
+敲下命令直接进入快速初始化流程，输入y，然后打开浏览器访问 https://openapi.baidu.com/device ，在“请输入设备上显示的用户授权码：”文本框中输入上面显示的授权码（这里是`12abcxyz`），并点击继续。
+看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即完成了初始化配置。  
+
 ### 初始化
 `./bpcs_uploader.php init`  
 
