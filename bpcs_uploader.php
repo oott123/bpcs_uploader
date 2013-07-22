@@ -9,7 +9,7 @@
 		die('this script can\'t run from the broswer.');
 	}
 	//设置项目
-	define('FILES_DIR',dirname(__FIle__).'/_bpcs_files_');	//设置目录，尾部不需要/
+	define('FILES_DIR',dirname(__FILE__).'/_bpcs_files_');	//设置目录，尾部不需要/
 	define('CONFIG_DIR',FILES_DIR.'/config');	//配置目录
 	//函数文件
 	include(FILES_DIR.'/common.inc.php');
@@ -41,10 +41,13 @@ EOF;
 	if($refresh_token){
 		//若存在refresh token，则刷新它。
 		$token_array=do_oauth_refresh(file_get_contents(CONFIG_DIR.'/appkey') , file_get_contents(CONFIG_DIR.'/appsec') , file_get_contents(CONFIG_DIR.'/refresh_token'));
-		$access_token = $token_array['access_token'];
-		$refresh_token = $token_array['refresh_token'];
-		file_put_contents(CONFIG_DIR.'/access_token',$access_token);
-		file_put_contents(CONFIG_DIR.'/refresh_token',$refresh_token);
+		if($token_array['access_token'] && $token_array['refresh_token']){
+			//防止获取不到token而自杀的行为
+			$access_token = $token_array['access_token'];
+			$refresh_token = $token_array['refresh_token'];
+			file_put_contents(CONFIG_DIR.'/access_token',$access_token);
+			file_put_contents(CONFIG_DIR.'/refresh_token',$refresh_token);
+		}
 	}
 	
 	switch($argv[1]){
