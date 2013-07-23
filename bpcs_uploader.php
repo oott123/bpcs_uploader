@@ -73,7 +73,7 @@ EOF;
 				die();
 			}
 			$path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$argv[3]);
-			$cmd = 'wget --no-check-certificate -O "'.$argv[2].' " "https://pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'"';
+			$cmd = 'wget --no-check-certificate -O "'.$argv[2].' " "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'"';
 			cmd($cmd);
 		break;
 		case 'delete':
