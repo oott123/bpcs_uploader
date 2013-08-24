@@ -44,7 +44,7 @@ EOF;
 				$appname = 'bpcs_uploader';
 			}else{
 				echo <<<EOF
-Now you have to enter your app floder name. You can enter it later in the file [ $prepathfile ].
+Now you have to enter your app folder name. You can enter it later in the file [ $prepathfile ].
 * Why i have to enter app floder name ? see FAQs.
 If your app name have Chinese characters , please swith your client to the UTF-8 mode.
 Here are some chinese characters . Before you enter chinese characters , make sure you can read these characters.
