@@ -9,8 +9,8 @@ Linux (or cygwin) with php & curl installed.
 
 ## 使用方法
 
-`$ chmod +x bpcs_uploader.php  
- $ .bpcs_uploader.php`  
+    chmod +x bpcs_uploader.php  
+    ./bpcs_uploader.php
 
 由于VPS上安装的php可能存在于各种地方，因此运行很可能不正常。请以使用`which php`得到你的php绝对路径，修改bpcs_uploader.php的头一句#!后的路径。  
 如果你的php是为了网站环境安装的，那么很有可能你会得到下面这条错误消息：  
@@ -20,13 +20,15 @@ Linux (or cygwin) with php & curl installed.
 那么说明你的环境由于安全原因禁止了部分函数的执行。请看FAQs的1。请使用那条长长的命令代替./bpcs_uploader.php。eg：`php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php quota`  
 
 ### 快速初始化
-`./bpcs_uploader.php quickinit`
+
+    ./bpcs_uploader.php quickinit
 
 敲下命令直接进入快速初始化流程，输入y，然后打开浏览器访问 https://openapi.baidu.com/device ，在“请输入设备上显示的用户授权码：”文本框中输入上面显示的授权码（这里是`12abcxyz`），并点击继续。
 看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即完成了初始化配置。  
 
 ### 初始化
-`./bpcs_uploader.php init`  
+
+    ./bpcs_uploader.php init
 
 敲下命令之后会进入初始化流程，这里分段详述设置方法。
 
@@ -95,28 +97,39 @@ Linux (or cygwin) with php & curl installed.
 你所看到的输出可能和这里给出的不一样，但是只要看到了存储空间的剩余量，和【Have fun !】提示，即说明成功初始化。
 
 ### 查询容量（配额）
-`./bpcs_uploader.php quota`  
+
+    ./bpcs_uploader.php quota 
 
 结果：  
 > Your Storage Status : 0.06G/115.00G (0.05%)
 
 ### 上传文件
-`./bpcs_uploader.php upload [path_local] [path_remote]`  
+
+    ./bpcs_uploader.php upload [path_local] [path_remote]
+
 路径格式：`foo/bar/file.ext`（路径中一定要包括文件名）  
 上传后，能在百度网盘/我的应用数据/应用名/foo/bar下找到一个叫file.ext的文件。
 
 ### 下载文件
-`./bpcs_uploader.php download [path_local] [path_remote]` 
+
+    ./bpcs_uploader.php download [path_local] [path_remote]
 
 ### 删除文件
-`./bpcs_uploader.php delete [path_remote]` 
+
+    ./bpcs_uploader.php delete [path_remote]
 
 ### 离线下载
-`./bpcs_uploader.php fetch [path_remote] [path_to_fetch]`  
+
+    ./bpcs_uploader.php fetch [path_remote] [path_to_fetch]
+
 注：离线下载已经可以正常使用。
 
 ## FAQs
-1. 各种错误提示  
-试试`php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php`。  
-2. 为什么要输入文件夹名？  
+
+1. 各种错误提示 
+
+试试`php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php`。 
+
+2. 为什么要输入文件夹名？ 
+
 因为百度PCS的权限被限制在了/apps/文件夹名/下。如果发现输入文件夹名后仍然无法上传文件，请通过网页版找到【我的应用数据】找到对应的文件夹名，写入/config/appname文件。上传文件的时候会自动帮您处理文件夹，无需手动写出完整路径。
