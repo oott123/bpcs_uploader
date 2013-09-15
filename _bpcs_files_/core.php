@@ -149,7 +149,7 @@ EOF;
 		return $quota;
 	}
 	function upload_file($access_token,$path,$localfile,$ondup='newcopy'){
-		$path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$path);
+		$path='/apps/'.urlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).'/'.$path);
 		$url = "https://c.pcs.baidu.com/rest/2.0/pcs/file?method=upload&access_token=$access_token&path=$path&ondup=$ondup";
 		$add = "--form file=@$localfile";
 		$cmd = "curl -X POST -k -L $add \"$url\"";
@@ -159,14 +159,14 @@ EOF;
 		return $cmd;
 	}
 	function delete_file($access_token,$path){
-		$path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$path);
+		$path='/apps/'.urlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).'/'.$path);
 		$dele=do_api('https://pcs.baidu.com/rest/2.0/pcs/file',"method=delete&access_token=".$access_token.'&path='.$path,'GET');
 		$dele=json_decode($dele,1);
 		apierr($dele);
 		return $dele;
 	}
 	function fetch_file($access_token,$path,$url){
-		$path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$path);
+		$path='/apps/'.urlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).'/'.$path);
 		$fetch=do_api('https://pcs.baidu.com/rest/2.0/pcs/services/cloud_dl',"method=add_task&access_token=".$access_token.'&save_path='.$path.'&source_url='.$url,'GET');
 		$fetch=json_decode($fetch,1);
 		apierr($fetch);
