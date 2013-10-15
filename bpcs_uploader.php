@@ -18,9 +18,10 @@
 	echo <<<EOF
 ===========================Baidu PCS Uploader===========================
 usage : $argv[0] init|quickinit|quota
-usage : $argv[0] upload|download [path_local] [path_remote]
-usage : $argv[0] delete [path_remote]
-usage : $argv[0] fetch [path_remote] [path_to_fetch]
+usage : $argv[0] upload|download path_local path_remote
+usage : $argv[0] delete path_remote
+usage : $argv[0] uploadbig path_local path_remote [slice_size(def:1073741824)] [temp_dir(def:/tmp/)]
+usage : $argv[0] fetch path_remote path_to_fetch
 ========================================================================
 
 EOF;
@@ -94,4 +95,22 @@ EOF;
 			}
 			fetch_file($access_token,$argv[2],$argv[3]);
 		break;
+		case 'uploadbig':
+			//uploadbig - 大文件上传
+			switch(count($argv)){
+				case 0:
+				case 1:
+				case 2:
+				case 3:	//参数数目不够
+					echon('Parameters unmatched.');
+					die(9099);
+				case 4:	//设置默认值（单个文件大小->1G）
+					$argv[4] = 1073741824;
+					//因为需要继续下面的操作所以这里没有break
+				case 5:	//设置默认值（临时文件目录->/tmp/）
+					$argv[5] = '/tmp/';
+					//因为需要继续下面的操作所以这里没有break
+				default:	//开始上传操作
+					super_file($access_token,$argv[3],$argv[2],'newcopy',$argv[4],$argv[5]);
+			}
 	}

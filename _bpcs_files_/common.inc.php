@@ -1,9 +1,16 @@
 <?php
-	function echon($str){
-		echo $str."\n";
+	function echon($str,$debug=false){
+		if($debug){
+			echo $str."\n";
+		}else{
+			echo chr(27)."[0;34m".$str.chr(27)."[m\n";
+		}
 	}
 	function getline(){
 		return trim(fgets(STDIN));
+	}
+	function getpath($path){
+		return '/apps/'.urlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).'/'.$path);
 	}
 	function oaerr($arr,$exitonerror = 1){
 		if(isset($arr['error'])){
@@ -38,7 +45,7 @@
 	}
 	function cmd($cfe) {
 		$res = '';
-		echon($cfe);
+		echon($cfe,1);
 		$cfe = $cfe;
 		if ($cfe) {
 			if(function_exists('exec')) {
@@ -64,6 +71,7 @@
 				@pclose($f);
 			}
 		}
+		echon($res,1);
 		return $res;
 	}
 	function do_api($url,$param,$method = 'POST'){
@@ -78,7 +86,9 @@
 	function error_handle($errno, $errstr, $errfile, $errline){
 		switch ($errno) {
 			case E_USER_ERROR:
-				echon("Fatal ERROR : $errfile ($errline) $errstr");die('Exiting with a fatal error.'."\n");
+				echon("Fatal ERROR : $errfile ($errline) $errstr");
+				echon('Exiting with a fatal error.'."\n");
+				die(9002);
 			break;
 			case E_USER_WARNING:
 				echon("WARNING : $errfile ($errline) $errstr");
