@@ -33,7 +33,7 @@ EOF;
 				echo <<<EOF
 	Now you have to enter your baidu PSC app secret. If you dont know the secret , keep it blank.
 
-	EOF;
+EOF;
 				echo 'App SECRET [] :';
 				$appsec = getline();
 			}
