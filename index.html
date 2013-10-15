@@ -28,18 +28,22 @@
 
     <div class="container">
       <section id="main_content">
-        <h1>bpcs_uploader</h1>
+        <h1>
+<a name="bpcs_uploader" class="anchor" href="#bpcs_uploader"><span class="octicon octicon-link"></span></a>bpcs_uploader</h1>
 
 <p>百度pcs上传脚本</p>
 
-<h2>系统要求</h2>
+<h2>
+<a name="%E7%B3%BB%E7%BB%9F%E8%A6%81%E6%B1%82" class="anchor" href="#%E7%B3%BB%E7%BB%9F%E8%A6%81%E6%B1%82"><span class="octicon octicon-link"></span></a>系统要求</h2>
 
 <p>Linux (or cygwin) with php &amp; curl installed.</p>
 
-<h2>使用方法</h2>
+<h2>
+<a name="%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="octicon octicon-link"></span></a>使用方法</h2>
 
-<p><code>$ chmod +x bpcs_uploader.php  
- $ .bpcs_uploader.php</code>  </p>
+<pre><code>chmod +x bpcs_uploader.php  
+./bpcs_uploader.php
+</code></pre>
 
 <p>由于VPS上安装的php可能存在于各种地方，因此运行很可能不正常。请以使用<code>which php</code>得到你的php绝对路径，修改bpcs_uploader.php的头一句#!后的路径。<br>
 如果你的php是为了网站环境安装的，那么很有可能你会得到下面这条错误消息：  </p>
@@ -50,16 +54,20 @@
 
 <p>那么说明你的环境由于安全原因禁止了部分函数的执行。请看FAQs的1。请使用那条长长的命令代替./bpcs_uploader.php。eg：<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php quota</code>  </p>
 
-<h3>快速初始化</h3>
+<h3>
+<a name="%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96" class="anchor" href="#%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="octicon octicon-link"></span></a>快速初始化</h3>
 
-<p><code>./bpcs_uploader.php quickinit</code></p>
+<pre><code>./bpcs_uploader.php quickinit
+</code></pre>
 
 <p>敲下命令直接进入快速初始化流程，输入y，然后打开浏览器访问 <a href="https://openapi.baidu.com/device">https://openapi.baidu.com/device</a> ，在“请输入设备上显示的用户授权码：”文本框中输入上面显示的授权码（这里是<code>12abcxyz</code>），并点击继续。
 看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即完成了初始化配置。  </p>
 
-<h3>初始化</h3>
+<h3>
+<a name="%E5%88%9D%E5%A7%8B%E5%8C%96" class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="octicon octicon-link"></span></a>初始化</h3>
 
-<p><code>./bpcs_uploader.php init</code>  </p>
+<pre><code>./bpcs_uploader.php init
+</code></pre>
 
 <p>敲下命令之后会进入初始化流程，这里分段详述设置方法。</p>
 
@@ -89,14 +97,14 @@ App SECRET [] :  </p>
 <p>第二步，输入App secret。如果输入了app secret，将会转到device code模式验证；或者直接输入回车使用oob模式验证。先直接回车：</p>
 
 <blockquote>
-<p>Now you have to enter your app name. You can enter it later in the file [ /root/_bpcs_files_/config/appname ].  </p>
+<p>Now you have to enter your app name. You can enter it later in the file [ /root/<em>bpcs</em>files_/config/appname ].  </p>
 
 <ul>
 <li>Why i have to enter app name ? see FAQs.<br>
 If your app name have Chinese characters , please swith your client to the UTF-8 mode.<br>
 Here are some chinese characters . Before you enter chinese characters , make sure you can read these characters.<br>
 这里是一些中文字符。<br>
-If you cant read any chinese above , please press enter , and change it manually in the file [ /root/_bpcs_files_/config/appname ] .<br>
+If you cant read any chinese above , please press enter , and change it manually in the file [ /root/<em>bpcs</em>files_/config/appname ] .<br>
 If you have Enter the key <a href="by%20default">L6g70tBRRIXLsY0Z3HwKqlRE</a> , just press Enter.<br>
 App Name [pcstest_oauth] :<br>
 </li>
@@ -144,9 +152,11 @@ Have fun !  </p>
 
 <p>你所看到的输出可能和这里给出的不一样，但是只要看到了存储空间的剩余量，和【Have fun !】提示，即说明成功初始化。</p>
 
-<h3>查询容量（配额）</h3>
+<h3>
+<a name="%E6%9F%A5%E8%AF%A2%E5%AE%B9%E9%87%8F%E9%85%8D%E9%A2%9D" class="anchor" href="#%E6%9F%A5%E8%AF%A2%E5%AE%B9%E9%87%8F%E9%85%8D%E9%A2%9D"><span class="octicon octicon-link"></span></a>查询容量（配额）</h3>
 
-<p><code>./bpcs_uploader.php quota</code>  </p>
+<pre><code>./bpcs_uploader.php quota 
+</code></pre>
 
 <p>结果：  </p>
 
@@ -154,34 +164,45 @@ Have fun !  </p>
 <p>Your Storage Status : 0.06G/115.00G (0.05%)</p>
 </blockquote>
 
-<h3>上传文件</h3>
+<h3>
+<a name="%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6" class="anchor" href="#%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6"><span class="octicon octicon-link"></span></a>上传文件</h3>
 
-<p><code>./bpcs_uploader.php upload [path_local] [path_remote]</code><br>
-路径格式：<code>foo/bar/file.ext</code>（路径中一定要包括文件名）<br>
+<pre><code>./bpcs_uploader.php upload [path_local] [path_remote]
+</code></pre>
+
+<p>路径格式：<code>foo/bar/file.ext</code>（路径中一定要包括文件名）<br>
 上传后，能在百度网盘/我的应用数据/应用名/foo/bar下找到一个叫file.ext的文件。</p>
 
-<h3>下载文件</h3>
+<h3>
+<a name="%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6" class="anchor" href="#%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6"><span class="octicon octicon-link"></span></a>下载文件</h3>
 
-<p><code>./bpcs_uploader.php download [path_local] [path_remote]</code> </p>
+<pre><code>./bpcs_uploader.php download [path_local] [path_remote]
+</code></pre>
 
-<h3>删除文件</h3>
+<h3>
+<a name="%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6" class="anchor" href="#%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6"><span class="octicon octicon-link"></span></a>删除文件</h3>
 
-<p><code>./bpcs_uploader.php delete [path_remote]</code> </p>
+<pre><code>./bpcs_uploader.php delete [path_remote]
+</code></pre>
 
-<h3>离线下载</h3>
+<h3>
+<a name="%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD" class="anchor" href="#%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD"><span class="octicon octicon-link"></span></a>离线下载</h3>
 
-<p><code>./bpcs_uploader.php fetch [path_remote] [path_to_fetch]</code><br>
-注：离线下载已经可以正常使用。</p>
+<pre><code>./bpcs_uploader.php fetch [path_remote] [path_to_fetch]
+</code></pre>
 
-<h2>FAQs</h2>
+<p>注：离线下载已经可以正常使用。</p>
+
+<h2>
+<a name="faqs" class="anchor" href="#faqs"><span class="octicon octicon-link"></span></a>FAQs</h2>
 
 <ol>
-<li>各种错误提示<br>
-试试<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php</code>。<br>
-</li>
-<li>为什么要输入文件夹名？<br>
-因为百度PCS的权限被限制在了/apps/文件夹名/下。如果发现输入文件夹名后仍然无法上传文件，请通过网页版找到【我的应用数据】找到对应的文件夹名，写入/config/appname文件。上传文件的时候会自动帮您处理文件夹，无需手动写出完整路径。</li>
-</ol>
+<li>各种错误提示 </li>
+</ol><p>试试<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php</code>。 </p>
+
+<ol>
+<li>为什么要输入文件夹名？ </li>
+</ol><p>因为百度PCS的权限被限制在了/apps/文件夹名/下。如果发现输入文件夹名后仍然无法上传文件，请通过网页版找到【我的应用数据】找到对应的文件夹名，写入/config/appname文件。上传文件的时候会自动帮您处理文件夹，无需手动写出完整路径。</p>
       </section>
     </div>
 
