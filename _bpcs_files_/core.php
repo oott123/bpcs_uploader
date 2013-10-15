@@ -33,7 +33,7 @@ EOF;
 				echo <<<EOF
 	Now you have to enter your baidu PSC app secret. If you dont know the secret , keep it blank.
 
-EOF;
+	EOF;
 				echo 'App SECRET [] :';
 				$appsec = getline();
 			}
@@ -44,7 +44,7 @@ EOF;
 				$appname = 'bpcs_uploader';
 			}else{
 				echo <<<EOF
-Now you have to enter your app folder name. You can enter it later in the file [ $prepathfile ].
+Now you have to enter your app floder name. You can enter it later in the file [ $prepathfile ].
 * Why i have to enter app floder name ? see FAQs.
 If your app name have Chinese characters , please swith your client to the UTF-8 mode.
 Here are some chinese characters . Before you enter chinese characters , make sure you can read these characters.
@@ -149,7 +149,7 @@ EOF;
 		return $quota;
 	}
 	function upload_file($access_token,$path,$localfile,$ondup='newcopy'){
-		$path='/apps/'.urlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).'/'.$path);
+		$path = getpath($path);
 		$url = "https://c.pcs.baidu.com/rest/2.0/pcs/file?method=upload&access_token=$access_token&path=$path&ondup=$ondup";
 		$add = "--form file=@$localfile";
 		$cmd = "curl -X POST -k -L $add \"$url\"";
@@ -159,16 +159,69 @@ EOF;
 		return $cmd;
 	}
 	function delete_file($access_token,$path){
-		$path='/apps/'.urlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).'/'.$path);
+		$path = getpath($path);
 		$dele=do_api('https://pcs.baidu.com/rest/2.0/pcs/file',"method=delete&access_token=".$access_token.'&path='.$path,'GET');
 		$dele=json_decode($dele,1);
 		apierr($dele);
 		return $dele;
 	}
 	function fetch_file($access_token,$path,$url){
-		$path='/apps/'.urlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).'/'.$path);
+		$path = getpath($path);
 		$fetch=do_api('https://pcs.baidu.com/rest/2.0/pcs/services/cloud_dl',"method=add_task&access_token=".$access_token.'&save_path='.$path.'&source_url='.$url,'GET');
 		$fetch=json_decode($fetch,1);
 		apierr($fetch);
 		return $fetch;
+	}
+	//分片上传
+	function super_file($access_token,$path,$localfile,$ondup='newcopy',$sbyte=1073741824,$temp_dir='/tmp/'){
+		//调用split命令进行切割
+		//split -b200 --verbose rubygems-1.8.25.zip rg/rg1
+		if(filesize($localfile)<=$sbyte){
+			echon('The file is not as big as it need to be created by superfile.');
+			upload_file($access_token,$path,$localfile,$ondup);	//直接上传
+		}
+		$tempfdir = rtrim($temp_dir,'/').'/'.uniqid('bpcs_to_upload_');
+		if(!mkdir($tempfdir,0700,true)){
+			echon('Cannot create temp dir:'.$tempfdir);
+			die(9009);
+		}
+		$splitcmd = "split -b{$sbyte} $localfile $tempfdir/bpcs_toupload_";
+		$splitresult = cmd($splitcmd);
+		if(trim($splitresult)){
+			echon('Split quit with an message:'.$splitresult);
+		}
+		//遍历临时文件目录
+		$tempfiles = glob($tempfdir.'/bpcs_toupload_*');
+		if(count($tempfiles)<1){
+			//没有生成文件
+			echon('There are no files to upload.');
+			die(9010);
+		}elseif(count($tempfiles)==1){
+			//只有一个文件
+			unlink($tempfiles[0]);	//删除它
+			echon('The file is not as big as it need to be created by superfile.');
+			upload_file($access_token,$path,$localfile,$ondup);	//直接上传
+			return;
+		}
+		//开始上传进程
+		$block_list = array();
+		$count = 0;
+		foreach($tempfiles as $tempfile){
+			//上传临时文件，上传API与上传普通文件无异，只是多一个参数type=tmpfile，取消了其它几个参数。此处将“&type=tmpfile”作为ondup传递，将参数带在请求尾部。
+			echon('Uploading '.($count+1).' out of '.count($tempfiles).' file blocks ... ');
+			$count++;
+			$upload_res = upload_file($access_token,'',$tempfile,$ondup.'&type=tmpfile');
+			$block_list[] = $upload_res['md5'];
+			//删除临时文件
+			unlink($tempfile);
+		}
+		//删除临时文件夹
+		rmdir($tempfdir);
+		//准备提交API
+		$block_list = json_encode($block_list);
+		$param = '{"block_list":'.$block_list.'}';
+		$param = 'param='.urlencode($param);
+		$path = getpath($path);
+		$url = "https://pcs.baidu.com/rest/2.0/file?method=createsuperfile&path={$path}&access_token={$access_token}";
+		$res = do_api($url,$param);
 	}
