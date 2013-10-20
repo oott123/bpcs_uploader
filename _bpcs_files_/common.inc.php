@@ -1,7 +1,8 @@
 <?php
 	function echon($str,$debug=false){
 		if($debug){
-			echo $str."\n";
+			//slient when the message is debug output
+			//echo $str."\n";
 		}else{
 			echo chr(27)."[0;34m".$str.chr(27)."[m\n";
 		}
@@ -76,9 +77,9 @@
 	}
 	function do_api($url,$param,$method = 'POST'){
 		if($method == 'POST'){
-			$cmd = "curl -X POST -k -L --silent --data \"$param\" \"$url\"";
+			$cmd = "curl -X POST -k -L --data \"$param\" \"$url\"";
 		}else{
-			$cmd = "curl -X $method -k -L --silent \"$url?$param\"";
+			$cmd = "curl -X $method -k -L \"$url?$param\"";
 		}
 		
 		return cmd($cmd);
