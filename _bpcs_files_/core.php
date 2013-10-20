@@ -27,6 +27,7 @@ EOF;
     $appkey = ($appkey) ? $appkey : BPCSU_KEY;
     file_put_contents(CONFIG_DIR.'/appkey',$appkey);
     echon('App API Key has been set to '.$appkey.' . ');
+    $appsec = false;//作用域
     if($appkey == BPCSU_KEY){
       echon('Demo key detected. Using default API Secret.');
       $appsec=BPCSU_SEC;
