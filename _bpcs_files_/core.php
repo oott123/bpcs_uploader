@@ -16,9 +16,9 @@ function du_init($quickinit = false){
     //正常初始化
     echo <<<EOF
 Please enter your PSC App API Key. You can get this key by visiting http://developer.baidu.com/dev#/create
-If you already created an app, you can visit http://developer.baidu.com/console#/app and get it in your app\'s info.
+If you have already created an app, you can visit http://developer.baidu.com/console#/app and get it in your app\'s info.
 If you don\'t want to bother creating an app, you can press Enter to use the demo API Key.
-Doing so (without your own API Key/Secret) will cause the access-token expire every 30 days, and you\'ll have to
+Doing so (without your own API Key/Secret) will cause the access-token to expire every 30 days, and you\'ll have to
 re-initialize when it expires.
 
 EOF;
