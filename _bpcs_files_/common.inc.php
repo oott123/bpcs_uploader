@@ -76,9 +76,9 @@
 	}
 	function do_api($url,$param,$method = 'POST'){
 		if($method == 'POST'){
-			$cmd = "curl -X POST -k -L --data \"$param\" \"$url\"";
+			$cmd = "curl -X POST -k -L --silent --data \"$param\" \"$url\"";
 		}else{
-			$cmd = "curl -X $method -k -L \"$url?$param\"";
+			$cmd = "curl -X $method -k -L --silent \"$url?$param\"";
 		}
 		
 		return cmd($cmd);
