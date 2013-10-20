@@ -17,11 +17,11 @@ include(FILES_DIR.'/core.php');
 //欢迎信息
 echo <<<EOF
 ===========================Baidu PCS Uploader===========================
-usage : $argv[0] init|quickinit|quota
-usage : $argv[0] upload|download path_local path_remote
-usage : $argv[0] delete path_remote
-usage : $argv[0] uploadbig path_local path_remote [slice_size(default:1073741824)] [temp_dir(def:/tmp/)]
-usage : $argv[0] fetch path_remote path_to_fetch
+Usage: $argv[0] init|quickinit|quota
+Usage: $argv[0] upload|download path_local path_remote
+Usage: $argv[0] delete path_remote
+Usage: $argv[0] uploadbig path_local path_remote [slice_size(default:1073741824)] [temp_dir(def:/tmp/)]
+Usage: $argv[0] fetch path_remote path_to_fetch
 ========================================================================
 
 EOF;
