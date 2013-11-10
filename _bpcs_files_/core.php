@@ -153,6 +153,7 @@ function get_quota($access_token){
 function upload_file($access_token,$path,$localfile,$ondup='newcopy'){
   $path = getpath($path);
   $url = "https://c.pcs.baidu.com/rest/2.0/pcs/file?method=upload&access_token=$access_token&path=$path&ondup=$ondup";
+  $localfile = escapeshellarg($localfile);
   $add = "--form file=@$localfile";
   $cmd = "curl -X POST -k -L $add \"$url\"";
   $cmd = cmd($cmd);
