@@ -11,7 +11,7 @@
 		return trim(fgets(STDIN));
 	}
 	function getpath($path){
-		return '/apps/'.urlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).'/'.$path);
+		return '/apps/'.rawurlencode(trim(file_get_contents(CONFIG_DIR.'/appname')).str_replace('/./', '/', '/'.$path));
 	}
 	function oaerr($arr,$exitonerror = 1){
 		if(isset($arr['error'])){
