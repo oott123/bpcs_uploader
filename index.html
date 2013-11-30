@@ -41,18 +41,18 @@
 <h2>
 <a name="%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="octicon octicon-link"></span></a>使用方法</h2>
 
-<pre><code>chmod +x bpcs_uploader.php  
+<pre><code>chmod +x bpcs_uploader.php
 ./bpcs_uploader.php
 </code></pre>
 
-<p>由于VPS上安装的php可能存在于各种地方，因此运行很可能不正常。请以使用<code>which php</code>得到你的php绝对路径，修改bpcs_uploader.php的头一句#!后的路径。<br>
-如果你的php是为了网站环境安装的，那么很有可能你会得到下面这条错误消息：  </p>
+<p>由于VPS上安装的php可能存在于各种地方，因此运行很可能不正常。请以使用<code>which php</code>得到你的php绝对路径，修改bpcs_uploader.php的头一句#!后的路径。
+如果你的php是为了网站环境安装的，那么很有可能你会得到下面这条错误消息：</p>
 
 <blockquote>
-<p>xxx() has been disabled for security reasons  </p>
+<p>xxx() has been disabled for security reasons</p>
 </blockquote>
 
-<p>那么说明你的环境由于安全原因禁止了部分函数的执行。请看FAQs的1。请使用那条长长的命令代替./bpcs_uploader.php。eg：<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php quota</code>  </p>
+<p>那么说明你的环境由于安全原因禁止了部分函数的执行。请看FAQs的1。请使用那条长长的命令代替./bpcs_uploader.php。eg：<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php quota</code></p>
 
 <h3>
 <a name="%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96" class="anchor" href="#%E5%BF%AB%E9%80%9F%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="octicon octicon-link"></span></a>快速初始化</h3>
@@ -61,7 +61,7 @@
 </code></pre>
 
 <p>敲下命令直接进入快速初始化流程，输入y，然后打开浏览器访问 <a href="https://openapi.baidu.com/device">https://openapi.baidu.com/device</a> ，在“请输入设备上显示的用户授权码：”文本框中输入上面显示的授权码（这里是<code>12abcxyz</code>），并点击继续。
-看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即完成了初始化配置。  </p>
+看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即完成了初始化配置。</p>
 
 <h3>
 <a name="%E5%88%9D%E5%A7%8B%E5%8C%96" class="anchor" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="octicon octicon-link"></span></a>初始化</h3>
@@ -72,82 +72,78 @@
 <p>敲下命令之后会进入初始化流程，这里分段详述设置方法。</p>
 
 <blockquote>
-<p>Now start the initiation. If you have configured the uploader , it will be overwirte.<br>
+<p>Uploader initialization will be begin. If you have already configured the uploader before, your old settings will be overwritten.<br>
 Continue? [y/N] y</p>
 </blockquote>
 
-<p>确认初始化。如果之前有初始化过，那么以前的配置将会被覆盖。 </p>
+<p>确认初始化。如果之前有初始化过，那么以前的配置将会被覆盖。</p>
 
 <blockquote>
-<p>Now you have to enter your baidu PSC app key . You should know that it needs a manual acting.<br>
-You can request for it via <a href="http://developer.baidu.com/dev#/create">http://developer.baidu.com/dev#/create</a> .<br>
-Make sure you have the PCS app key . if you haven't , you can use the demo key by just hit Enter. 
-So if you dont have the app secret , you have to re-init every month , for the access-token will expires every month.<br>
-App KEY [uFBSHEwWE6DD94SQx9z77vgG] :  </p>
+<p>Please enter your PSC App API Key. You can get this key by visiting <a href="http://developer.baidu.com/dev#/create">http://developer.baidu.com/dev#/create</a><br>
+If you have already created an app, you can visit <a href="http://developer.baidu.com/console#/app">http://developer.baidu.com/console#/app</a> and get it in your app's info.<br>
+If you don't want to bother creating an app, you can press Enter to use the demo API Key.<br>
+Doing so (without your own API Key/Secret) will cause the access-token to expire every 30 days, and you'll have to re-initialize when it expires.<br>
+App API KEY [uFBSHEwWE6DD94SQx9z77vgG] :</p>
 </blockquote>
 
-<p>第一步，输入App key。这里需要输入一个有PCS权限的API KEY，如果没有的话直接敲回车就好了，这里会默认使用内置的一组app key,app secret和app foloder name，所以只要敲下回车就能直接跳到第四步。如果你没有App secret（例如使用L6g70tBRRIXLsY0Z3HwKqlRE这个Key时），只能获取一个有效期为一个月的access token。如果有一个有PSC权限的API KEY和secret，那么就能获得一个有效期为10年的refresh token，以便长期使用。</p>
+<p>第一步，输入App key。这里需要输入一个有PCS权限的API KEY，如果没有的话直接敲回车就好了，这里会默认使用内置的一组app key,app secret和app folder name，所以只要敲下回车就能直接跳到第四步。如果你没有App secret（例如使用L6g70tBRRIXLsY0Z3HwKqlRE这个Key时），只能获取一个有效期为一个月的access token。如果有一个有PSC权限的API KEY和secret，那么就能获得一个有效期为10年的refresh token，以便长期使用。</p>
 
 <blockquote>
-<p>App key has been setted to uFBSHEwWE6DD94SQx9z77vgG .<br>
-Now you have to enter your baidu PSC app secret. If you dont know the secret , keep it blank.<br>
-App SECRET [] :  </p>
+<p>App API Key has been set to uFBSHEwWE6DD94SQx9z77vgG .<br>
+Please enter your Baidu PSC App API Secret. If you have no idea what it is, keep it blank.<br>
+App API SECRET [] :</p>
 </blockquote>
 
 <p>第二步，输入App secret。如果输入了app secret，将会转到device code模式验证；或者直接输入回车使用oob模式验证。先直接回车：</p>
 
 <blockquote>
-<p>Now you have to enter your app name. You can enter it later in the file [ /root/<em>bpcs</em>files_/config/appname ].  </p>
-
-<ul>
-<li>Why i have to enter app name ? see FAQs.<br>
-If your app name have Chinese characters , please swith your client to the UTF-8 mode.<br>
-Here are some chinese characters . Before you enter chinese characters , make sure you can read these characters.<br>
+<p>Please enter your app's folder name. You can choose to input this later in the file [ /root/<em>bpcs</em>files_/config/appname ].<br>
+** Why do I have to enter the app's folder name? Please check the FAQs. **<br>
+If your app's name has Chinese characters, please ensure that your client supports UTF-8 encoding.<br>
+Below are some Chinese characters for testing. Please make sure that you can read them before you enter Chinese here.<br>
 这里是一些中文字符。<br>
-If you cant read any chinese above , please press enter , and change it manually in the file [ /root/<em>bpcs</em>files_/config/appname ] .<br>
+If you can't read the characters above, please press Enter and change it manually within the file [ /root/<em>bpcs</em>files_/config/appname ].<br>
 If you have Enter the key <a href="by%20default">L6g70tBRRIXLsY0Z3HwKqlRE</a> , just press Enter.<br>
-App Name [pcstest_oauth] :<br>
-</li>
-</ul>
+App Name [pcstest_oauth] :</p>
 </blockquote>
 
-<p>第三步，这里需要输入app floder name，也就是你申请API时填写的文件夹名字。详情见FAQ 2。因为是使用的默认的key，所以直接回车即可。</p>
+<p>第三步，这里需要输入app folder name，也就是你申请API时填写的文件夹名字。详情见FAQ 2。因为是使用的默认的key，所以直接回车即可。</p>
 
 <blockquote>
-<p>Now you have to get your oauth access_token by your own .<br>
-Here is a reference document .<br><a href="http://developer.baidu.com/wiki/index.php?title=docs/pcs/guide/usage_example">http://developer.baidu.com/wiki/index.php?title=docs/pcs/guide/usage_example</a>  </p>
+<p>In the next step, you'll have to grab the access_token generated by Baidu.<br>
+You can check out this link for more information on this procedure:<br><a href="http://developer.baidu.com/wiki/index.php?title=docs/pcs/guide/usage_example">http://developer.baidu.com/wiki/index.php?title=docs/pcs/guide/usage_example</a>  </p>
 
-<p>A simple guide :<br>
-1.visit <a href="https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&amp;client_id=L6g70tBRRIXLsY0Z3HwKqlRE&amp;redirect_uri=oob&amp;scope=netdisk">https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&amp;client_id=L6g70tBRRIXLsY0Z3HwKqlRE&amp;redirect_uri=oob&amp;scope=netdisk</a><br>
-in your broswer.<br>
-2.when it redirected to a html page , copy the url to the notepad.<br>
-3.get the access_token from it , paste it and press Enter.<br>
-access_token[] :   </p>
+<p>Easy Guide:<br>
+1. Visit <a href="https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&amp;client_id=%24appkey&amp;redirect_uri=oob&amp;scope=netdisk">https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&amp;client_id=$appkey&amp;redirect_uri=oob&amp;scope=netdisk</a><br>
+2. After the page is being redirected (it should show something like OAuth 2.0), copy the current URL to your favorite text editor.<br>
+3. Grab the access_token part, take only the part between "access_token=" and the next "&amp;" symbol (without quotes).<br>
+4. Copy it and paste here, then press Enter.<br>
+access_token[] :</p>
 </blockquote>
 
-<p>第四步，获取access token。在浏览器中打开上述URL（ <a href="https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&amp;client_id=L6g70tBRRIXLsY0Z3HwKqlRE&amp;redirect_uri=oob&amp;scope=netdisk">https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&amp;client_id=L6g70tBRRIXLsY0Z3HwKqlRE&amp;redirect_uri=oob&amp;scope=netdisk</a> ），进行授权。<br>
+<p>第四步，获取access token。在浏览器中打开上述URL（ <a href="https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&amp;client_id=L6g70tBRRIXLsY0Z3HwKqlRE&amp;redirect_uri=oob&amp;scope=netdisk">https://openapi.baidu.com/oauth/2.0/authorize?response_type=token&amp;client_id=L6g70tBRRIXLsY0Z3HwKqlRE&amp;redirect_uri=oob&amp;scope=netdisk</a> ），进行授权。
 授权完毕后，将会跳到一个写着“百度 Oauth2.0”的页面。复制出其中的网页URL，找到access_token=和&amp;之间的字符串，例如：
-<code>3.**05c2ea85d52c2***************a5.2592000.136***9032.3089166538-23**47</code><br>
-将其复制到shell中粘贴并回车。使用这种方式初始化的用户，需要每月重新初始化。  </p>
+<code>3.**05c2ea85d52c2***************a5.2592000.136***9032.3089166538-23**47</code>
+将其复制到shell中粘贴并回车。使用这种方式初始化的用户，需要每月重新初始化。</p>
 
 <p>如果第三步输入app secret的时候没有留空，将会得到下面的消息：</p>
 
 <blockquote>
-<p>Now open your broswer and visit <a href="https://openapi.baidu.com/device">https://openapi.baidu.com/device</a> .<br>
-Copy or input 12abcxyz when it been asks.<br>
-After granted the access to the application , be back and press Enter key .  </p>
+<p>Launch your favorite web browser and visit <a href="https://openapi.baidu.com/device">https://openapi.baidu.com/device</a><br>
+Input 12abcxyz as the user code if asked.<br>
+After granting access to the application, come back here and press Enter to continue.</p>
 </blockquote>
 
 <p>来到这里，打开浏览器访问 <a href="https://openapi.baidu.com/device">https://openapi.baidu.com/device</a> ，在“请输入设备上显示的用户授权码：”文本框中输入上面显示的授权码（这里是<code>12abcxyz</code>），并点击继续。
-看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即可继续。  </p>
+看到网页上显示“请返回设备继续操作！”后，返回ssh上按下回车后，即可继续。</p>
 
 <blockquote>
 <p>curl -X GET -k -L "...."<br>
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current<br>
                                  Dload  Upload   Total   Spent    Left  Speed<br>
   0    62    0    62    0     0     40      0 --:--:--  0:00:01 --:--:--   235<br>
-Success . Your Storage Status : 0.06G/115.00G (0.05%)<br>
-Have fun !  </p>
+Access Granted. Your Storage Status: 0.06G/115.00G (0.05%)<br>
+Enjoy!</p>
 </blockquote>
 
 <p>你所看到的输出可能和这里给出的不一样，但是只要看到了存储空间的剩余量，和【Have fun !】提示，即说明成功初始化。</p>
@@ -155,10 +151,10 @@ Have fun !  </p>
 <h3>
 <a name="%E6%9F%A5%E8%AF%A2%E5%AE%B9%E9%87%8F%E9%85%8D%E9%A2%9D" class="anchor" href="#%E6%9F%A5%E8%AF%A2%E5%AE%B9%E9%87%8F%E9%85%8D%E9%A2%9D"><span class="octicon octicon-link"></span></a>查询容量（配额）</h3>
 
-<pre><code>./bpcs_uploader.php quota 
+<pre><code>./bpcs_uploader.php quota
 </code></pre>
 
-<p>结果：  </p>
+<p>结果：</p>
 
 <blockquote>
 <p>Your Storage Status : 0.06G/115.00G (0.05%)</p>
@@ -170,7 +166,7 @@ Have fun !  </p>
 <pre><code>./bpcs_uploader.php upload [path_local] [path_remote]
 </code></pre>
 
-<p>路径格式：<code>foo/bar/file.ext</code>（路径中一定要包括文件名）<br>
+<p>路径格式：<code>foo/bar/file.ext</code>（路径中一定要包括文件名）
 上传后，能在百度网盘/我的应用数据/应用名/foo/bar下找到一个叫file.ext的文件。</p>
 
 <h3>
@@ -197,11 +193,11 @@ Have fun !  </p>
 <a name="faqs" class="anchor" href="#faqs"><span class="octicon octicon-link"></span></a>FAQs</h2>
 
 <ol>
-<li>各种错误提示 </li>
-</ol><p>试试<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php</code>。 </p>
+<li>各种错误提示</li>
+</ol><p>试试<code>php -d disable_functions -d safe_mode=Off -f bpcs_uploader.php</code>。</p>
 
 <ol>
-<li>为什么要输入文件夹名？ </li>
+<li>为什么要输入文件夹名？</li>
 </ol><p>因为百度PCS的权限被限制在了/apps/文件夹名/下。如果发现输入文件夹名后仍然无法上传文件，请通过网页版找到【我的应用数据】找到对应的文件夹名，写入/config/appname文件。上传文件的时候会自动帮您处理文件夹，无需手动写出完整路径。</p>
       </section>
     </div>
