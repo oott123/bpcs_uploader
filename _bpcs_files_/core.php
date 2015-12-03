@@ -155,10 +155,13 @@ function upload_file($access_token,$path,$localfile,$ondup='newcopy'){
   $url = "https://c.pcs.baidu.com/rest/2.0/pcs/file?method=upload&access_token=$access_token&path=$path&ondup=$ondup";
   $localfile = escapeshellarg($localfile);
   $add = "--form file=@$localfile";
-  $cmd = "curl -X POST -k -L $add \"$url\"";
-  $cmd = cmd($cmd);
-  $cmd = json_decode($cmd,1);
-  apierr($cmd);
+  $tries = 0;
+  do {
+    $tries++;
+    $cmd = "curl -X POST -k -L $add \"$url\"";
+    $cmd = cmd($cmd);
+ 	  $cmd = json_decode($cmd,1);
+  } while(!apierr($cmd, 0) && $tries < 5);
   return $cmd;
 }
 function delete_file($access_token,$path){
