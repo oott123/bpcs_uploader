@@ -15,16 +15,8 @@ define('CONFIG_DIR',FILES_DIR.'/config');	//配置目录
 include(FILES_DIR.'/common.inc.php');
 include(FILES_DIR.'/core.php');
 //欢迎信息
-echo <<<EOF
-===========================Baidu PCS Uploader===========================
-Usage: $argv[0] init|quickinit|quota
-Usage: $argv[0] upload|download path_local path_remote
-Usage: $argv[0] delete path_remote
-Usage: $argv[0] uploadbig path_local path_remote [slice_size(default:1073741824)] [temp_dir(def:/tmp/)]
-Usage: $argv[0] fetch path_remote path_to_fetch
-========================================================================
 
-EOF;
+
 if(!is_dir(CONFIG_DIR)){
   mkdir(CONFIG_DIR);
 }
@@ -38,7 +30,6 @@ if(!is_file(CONFIG_DIR.'/config.lock') || $argv[1] == 'init' || $argv[1] == 'qui
 }
 $access_token = file_get_contents(CONFIG_DIR.'/access_token');
 $refresh_token = file_get_contents(CONFIG_DIR.'/refresh_token');
-
 if($refresh_token){
   //若存在refresh token，则刷新它。
   $token_array=do_oauth_refresh(file_get_contents(CONFIG_DIR.'/appkey') , file_get_contents(CONFIG_DIR.'/appsec') , file_get_contents(CONFIG_DIR.'/refresh_token'));
@@ -73,9 +64,51 @@ case 'download':
     echon("Missing parameters. Please check again.");
     die();
   }
+  if(substr($argv[2],-1)=="/"){
+     $argv2=$argv[2];
+  }else{
+     $argv2=$srgv[2]."/";//使path-local的第一个字符为"/"
+  }
+  if(substr($argv[3],0,1)=="/"){
+     $argv[3]=substr($argv[3],1);//如果path-remote的第一个字符为"/",删掉它
+  }else{
+     $argv[3]=$argv[3];
+  }
   $path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$argv[3]);
-  $cmd = 'wget -c --no-check-certificate -O "'.$argv[2].'" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'"';
-  cmd($cmd);
+
+ if($argv[4]==NULL){//$argv[4]是远程文件的MD5
+   $cmd = 'aria2c -x5 -s5 -c -o "'.$argv[2].'" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'" 1>&2';//这里我换成aria2了
+   $handle=popen($cmd,'r');
+   $read=fread($handle,4096);
+   echo $read."\n";
+   plose($handle);
+  }else{
+  while(md5check($argv[2],$argv[4])==false){
+   $cmd = 'aria2c --allow-overwrite=true --max-tries=0 -s5 -x5 -c -o "'.$argv[2].'" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'" 1>&2';
+   $handle=popen($cmd,'r');
+   $read=fread($handle,4096);
+   echo $read."\n";
+   plose($handle);
+     }
+  }
+  break;
+case 'dirdown':
+  //folder - 递归下载文件
+  if(count($argv)<3){
+     echon("Missing parameters. Please check again.");
+     die();
+    }
+  if(substr($argv[2],-1)=="/"){
+     $argv2=$argv[2];
+  }else{
+     $argv2=$srgv[2]."/";//使path-local的第一个字符为"/"
+  }
+  if(substr($argv[3],0,1)=="/"){
+     $argv[3]=substr($argv[3],1);//如果path-remote的第一个字符为"/",删掉它
+  }else{
+     $argv[3]=$argv[3];
+  }
+  decode($argv,$access_token);
   break;
 case 'delete':
   //delete - 删除文件
@@ -113,4 +146,84 @@ case 'uploadbig':
   default:	//开始上传操作
     super_file($access_token,$argv[3],$argv[2],'newcopy',$argv[4],$argv[5]);
   }
+default:
+echo <<<EOF
+===========================Baidu PCS Uploader===========================
+Usage: $argv[0] init|quickinit|quota
+Usage: $argv[0] upload|download path_local path_remote <md5>(optional)
+		NOTE:
+		1.Do not inter "/app/<appname>". e.g:if path_remote is
+                "/app/bpcs_uploader/1.txt",just use "/1.txt".
+		2.If you know remote file's MD5(e.g
+		"/app/bpcs_uploader/1.txt"'s MD5 ),you can inter it after
+		the path_remote phrase,the app will check while
+		downloading.(only use in downoading)
+Usage: $argv[0] dirdown dir_loacl dir_remote
+		NOTE:
+		the app will copy all the file in remote to local.
+		e.g:If there are
+		/app/bpcs_uploader/a/1.txt,/app/bpcs_uploader/a/b/2.txt,
+		/app/bpcs_uploader/a/c/3.txt
+		and you use "folderdown /home /a",you will find /home/a/1.txt
+		/home/a/b/2.txt,/home/a/c/3.txt.(in another word,the structure
+		of the directory and all the files will be copied.) 
+Usage: $argv[0] delete path_remote
+Usage: $argv[0] uploadbig path_local path_remote [slice_size(default:1073741824)] [temp_dir(def:/tmp/)]
+Usage: $argv[0] fetch path_remote path_to_fetch
+========================================================================
+
+EOF;
+break;
+}
+
+function decode($argv,$access_token){
+  //获取网盘文件列表开始
+  $ch=curl_init();
+  $path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$argv[3]);
+  $url= "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=list&access_token=".$access_token."&path=".$path;
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+  $output = curl_exec($ch);
+  curl_close($ch);
+  //获取结束
+  $decode_result=json_decode($output); //解码json
+  foreach ($decode_result->list as $i){
+   if ($i->isdir==0/*如果是文件的话*/){
+    $repeat=str_replace('/apps/'.file_get_contents(CONFIG_DIR.'/appname').'/',"",$i->path);//挑出网盘文件地址中去掉“/app/bpcs_uploader/”的部分
+    echo "--".date("Y-m-d")." ".date("h:i:sa")."-- start downloading: ".$argv[2].$repeat."\n";//显示开始下载
+    $cmd=$argv[0].' download "'.$argv[2].$repeat.'" "'.$repeat.'" '.$i->md5; //递归调用此脚本的下载方法
+    $handle=popen($cmd,'r');
+    $read=fread($handle,4096);
+    echo $read;//显示下载过程
+    pclose($handle);
+    echo "--".date("Y-m-d")." ".date("h:i:sa")."-- downloading finished: ".$argv[2].$repeat."\n";
+    echo "\n";
+    }else/*是目录的话*/{
+    $argv3=str_replace('/apps/'.file_get_contents(CONFIG_DIR.'/appname').'/',"",$i->path);
+    decode(Array($argv[0],$argv[1],$argv[2],$argv3),$access_token);//递归获取下一层目录
+   }
+  }
+}
+
+function md5check($argv2,$argv4){
+ if(is_file($argv2)){
+   $a='md5sum "'.$argv2.'"';
+   $b=popen($a,'r');
+   $r=substr(fread($b,1024),0,32);
+   pclose($b);
+  if($r==$argv4){
+   $e="echo  \033[32m".chr(34)."--".date("Y-m-d")." ".date("h:i:sa")."-- local file's MD5 is ".$r.",the remote flie's MD5 is ".$argv4.",they are equal,so no need to download.".chr(34)." \033[0m \n";
+   system($e);
+   return TRUE;
+  }else{
+   $e="echo  \033[31m".chr(34)."--".date("Y-m-d")." ".date("h:i:sa")."-- local file's MD5 is ".$r.",the remote flie's MD5 is ".$argv4.",they are NOT equal.Need to download.".chr(34)." \033[0m \n";
+   system($e);
+   return FALSE;
+  }
+ }else{
+  $e="echo  \033[31m".chr(34)."--".date("Y-m-d")." ".date("h:i:sa")."-- local file does not exist.Need to download.".chr(34)." \033[0m \n";
+  system($e);
+  return FALSE;
+ }
 }

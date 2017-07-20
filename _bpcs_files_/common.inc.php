@@ -77,12 +77,19 @@
 	}
 	function do_api($url,$param,$method = 'POST'){
 		if($method == 'POST'){
-			$cmd = "curl -X POST -k -L --data \"$param\" \"$url\"";
+			$ch=curl_init(); //初始化curl
+			curl_setopt($ch, CURLOPT_URL, "https://openapi.baidu.com/oauth/2.0/device/code");//设置链接
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置是否返回信息
+			curl_setopt($ch, CURLOPT_POST, 1);//设置为POST方式
+			curl_setopt($ch, CURLOPT_POSTFIELDS,"client_id=uFBSHEwWE6DD94SQx9z77vgG&response_type=device_code&scope=basic,netdisk");//POST数据
+			$response = curl_exec($ch);//接收返回信息
+			curl_close($ch);
+			return $response;
 		}else{
 			$cmd = "curl -X $method -k -L \"$url?$param\"";
-		}
-		
+
 		return cmd($cmd);
+		}
 	}
 	function error_handle($errno, $errstr, $errfile, $errline){
 		switch ($errno) {

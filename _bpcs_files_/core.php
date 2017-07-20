@@ -143,6 +143,7 @@ function do_oauth_refresh($appkey,$appsec,$refresh_token){
     'access_token' => $access_token,
     'refresh_token' => $refresh_token,
   );
+
 }
 function get_quota($access_token){
   $quota=do_api('https://pcs.baidu.com/rest/2.0/pcs/quota',"method=info&access_token=".$access_token,'GET');
@@ -157,6 +158,7 @@ function upload_file($access_token,$path,$localfile,$ondup='newcopy'){
   $add = "--form file=@$localfile";
   $cmd = "curl -X POST -k -L $add \"$url\"";
   $cmd = cmd($cmd);
+
   $cmd = json_decode($cmd,1);
   apierr($cmd);
   return $cmd;
