@@ -76,20 +76,14 @@ case 'download':
   }
   $path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$argv[3]);
 
- if($argv[4]==NULL){//$argv[4]是远程文件的MD5
-   $cmd = 'aria2c -x5 -s5 -c -o "'.$argv[2].'" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'" 1>&2';//这里我换成aria2了
-   $handle=popen($cmd,'r');
-   $read=fread($handle,4096);
-   echo $read."\n";
-   plose($handle);
+  if($argv[4]==NULL){//$argv[4]是远程文件的MD5
+    $cmd = 'wget -t0 -c --no-check-certificate -O "'.$argv[2].'" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'"';     
+    cmd($cmd);
   }else{
-  while(md5check($argv[2],$argv[4])==false){
-   $cmd = 'aria2c --allow-overwrite=true --max-tries=0 -s5 -x5 -c -o "'.$argv[2].'" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'" 1>&2';
-   $handle=popen($cmd,'r');
-   $read=fread($handle,4096);
-   echo $read."\n";
-   plose($handle);
-     }
+    while(md5check($argv[2],$argv[4])==false){
+      $cmd = 'wget -c -t0 --no-check-certificate -O "'.$argv[2].'" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token='.$access_token.'&path='.$path.'"';     
+      cmd($cmd);
+    }
   }
   break;
 case 'dirdown':
@@ -177,53 +171,42 @@ break;
 }
 
 function decode($argv,$access_token){
-  //获取网盘文件列表开始
-  $ch=curl_init();
+  echon("--".date("Y-m-d")." ".date("h:i:sa")."-- start downloading dir \n",false,0);//显示开始下载
+  //获取网盘文件列表
   $path='/apps/'.urlencode(file_get_contents(CONFIG_DIR.'/appname').'/'.$argv[3]);
-  $url= "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=list&access_token=".$access_token."&path=".$path;
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, Array("Content-Type: text/xml"));
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-  $output = curl_exec($ch);
-  curl_close($ch);
-  //获取结束
+  $url= "https://pcs.baidu.com/rest/2.0/pcs/file";
+  $para="method=list&access_token=".$access_token."&path=".$path;
+  $output = do_api($url,$para,GET);
   $decode_result=json_decode($output); //解码json
   foreach ($decode_result->list as $i){
-   if ($i->isdir==0/*如果是文件的话*/){
-    $repeat=str_replace('/apps/'.file_get_contents(CONFIG_DIR.'/appname').'/',"",$i->path);//挑出网盘文件地址中去掉“/app/bpcs_uploader/”的部分
-    echo "--".date("Y-m-d")." ".date("h:i:sa")."-- start downloading: ".$argv[2].$repeat."\n";//显示开始下载
-    $cmd=$argv[0].' download "'.$argv[2].$repeat.'" "'.$repeat.'" '.$i->md5; //递归调用此脚本的下载方法
-    $handle=popen($cmd,'r');
-    $read=fread($handle,4096);
-    echo $read;//显示下载过程
-    pclose($handle);
-    echo "--".date("Y-m-d")." ".date("h:i:sa")."-- downloading finished: ".$argv[2].$repeat."\n";
-    echo "\n";
+    if ($i->isdir==0/*如果是文件的话*/){
+      $repeat=str_replace('/apps/'.file_get_contents(CONFIG_DIR.'/appname').'/',"",$i->path);//挑出网盘文件地址中去掉“/app/bpcs_uploader/”的部分
+      echon("--".date("Y-m-d")." ".date("h:i:sa")."-- start downloading: ".$argv[2].$repeat."\n",false,0);//显示开始下载
+      $cmd=$argv[0].' download "'.$argv[2].$repeat.'" "'.$repeat.'" '.$i->md5; //递归调用此脚本的下载方法
+      cmd($cmd,true);
+      echon("--".date("Y-m-d")." ".date("h:i:sa")."-- downloading finished: ".$argv[2].$repeat."\n",false,0);
     }else/*是目录的话*/{
-    $argv3=str_replace('/apps/'.file_get_contents(CONFIG_DIR.'/appname').'/',"",$i->path);
-    decode(Array($argv[0],$argv[1],$argv[2],$argv3),$access_token);//递归获取下一层目录
-   }
+      $repeat=str_replace('/apps/'.file_get_contents(CONFIG_DIR.'/appname').'/',"",$i->path);//挑出网盘文件地址中去掉“/app/bpcs_uploader/”的部分
+      cmd('mkdir -p '.'"'.$argv[2].$repeat.'"');
+      $argv3=str_replace('/apps/'.file_get_contents(CONFIG_DIR.'/appname').'/',"",$i->path);
+      decode(Array($argv[0],$argv[1],$argv[2],$argv3),$access_token);//递归获取下一层目录
+    }
   }
 }
 
 function md5check($argv2,$argv4){
- if(is_file($argv2)){
-   $a='md5sum "'.$argv2.'"';
-   $b=popen($a,'r');
-   $r=substr(fread($b,1024),0,32);
-   pclose($b);
-  if($r==$argv4){
-   $e="echo  \033[32m".chr(34)."--".date("Y-m-d")." ".date("h:i:sa")."-- local file's MD5 is ".$r.",the remote flie's MD5 is ".$argv4.",they are equal,so no need to download.".chr(34)." \033[0m \n";
-   system($e);
-   return TRUE;
+  if(is_file($argv2)){
+    $a='md5sum "'.$argv2.'"';
+    cmd($a,true);
+    if($r==$argv4){
+      echon("--".date("Y-m-d")." ".date("h:i:sa")."-- local file's MD5 is ".$r.",the remote flie's MD5 is ".$argv4.",they are equal,so no need to download.",false,32);
+      return TRUE;
+    }else{
+      echon(chr(34)."--".date("Y-m-d")." ".date("h:i:sa")."-- local file's MD5 is ".$r.",the remote flie's MD5 is ".$argv4.",they are NOT equal.Need to download.",false,31);
+      return FALSE;
+    }
   }else{
-   $e="echo  \033[31m".chr(34)."--".date("Y-m-d")." ".date("h:i:sa")."-- local file's MD5 is ".$r.",the remote flie's MD5 is ".$argv4.",they are NOT equal.Need to download.".chr(34)." \033[0m \n";
-   system($e);
-   return FALSE;
+    echon("--".date("Y-m-d")." ".date("h:i:sa")."-- local file does not exist.Need to download.",false,31);
+    return FALSE;
   }
- }else{
-  $e="echo  \033[31m".chr(34)."--".date("Y-m-d")." ".date("h:i:sa")."-- local file does not exist.Need to download.".chr(34)." \033[0m \n";
-  system($e);
-  return FALSE;
- }
 }

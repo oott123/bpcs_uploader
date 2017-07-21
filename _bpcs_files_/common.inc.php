@@ -1,10 +1,10 @@
 <?php
-	function echon($str,$debug=false){
+	function echon($str,$debug=false,$color=34){
 		if($debug){
 			//slient when the message is debug output
 			//echo $str."\n";
 		}else{
-			echo chr(27)."[0;34m".$str.chr(27)."[m\n";
+			echo chr(27)."[0;".$color."m".$str.chr(27)."[m\n";
 		}
 	}
 	function getline(){
@@ -44,7 +44,14 @@
 				die();
 		}
 	}
-	function cmd($cfe) {
+	function cmd($cfe,$ispopen=false) {
+		if($ispopen){
+			$handle=popen($cfe,'r');
+			$read=fread($handle,4096);
+			echo $read;
+			pclose($handle);
+			return;
+		}
 		$res = '';
 		echon($cfe,1);
 		$cfe = $cfe;
@@ -64,10 +71,10 @@
 				@passthru($cfe);
 				$res = @ob_get_contents();
 				@ob_end_clean();
-			} elseif(@is_resource($f = @popen($cfe,"r"))) {
+			} elseif(is_resource($f = popen($cfe,"r"))) {
 				$res = '';
 				while(!@feof($f)) {
-					$res .= @fread($f,1024); 
+					$res.=@fread($f,1024);
 				}
 				@pclose($f);
 			}
@@ -77,19 +84,12 @@
 	}
 	function do_api($url,$param,$method = 'POST'){
 		if($method == 'POST'){
-			$ch=curl_init(); //初始化curl
-			curl_setopt($ch, CURLOPT_URL, "https://openapi.baidu.com/oauth/2.0/device/code");//设置链接
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置是否返回信息
-			curl_setopt($ch, CURLOPT_POST, 1);//设置为POST方式
-			curl_setopt($ch, CURLOPT_POSTFIELDS,"client_id=uFBSHEwWE6DD94SQx9z77vgG&response_type=device_code&scope=basic,netdisk");//POST数据
-			$response = curl_exec($ch);//接收返回信息
-			curl_close($ch);
-			return $response;
+			$cmd = "curl -X POST -k -L --data \"$param\" \"$url\"";
 		}else{
 			$cmd = "curl -X $method -k -L \"$url?$param\"";
-
-		return cmd($cmd);
 		}
+		
+		return cmd($cmd);
 	}
 	function error_handle($errno, $errstr, $errfile, $errline){
 		switch ($errno) {
