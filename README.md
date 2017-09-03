@@ -133,3 +133,7 @@ Linux (or cygwin) with php & curl installed.
 2. 为什么要输入文件夹名？
 
 因为百度PCS的权限被限制在了/apps/文件夹名/下。如果发现输入文件夹名后仍然无法上传文件，请通过网页版找到【我的应用数据】找到对应的文件夹名，写入/config/appname文件。上传文件的时候会自动帮您处理文件夹，无需手动写出完整路径。
+
+3. 杀软报毒
+
+某些PHP后门（比如PHPSpy）会调用shell命令，所以杀软以此作为判断PHP病毒的依据。bpcs_uploader只是调用shell命令来实现一些必要的操作（curl、wget等），可以放心使用。
