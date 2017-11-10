@@ -176,7 +176,7 @@ function fetch_file($access_token,$path,$url){
   return $fetch;
 }
 //分片上传
-function super_file($access_token,$path,$localfile,$ondup='newcopy',$sbyte=1073741824,$temp_dir='/tmp/'){
+function super_file($access_token,$path,$localfile,$ondup='newcopy',$sbyte=2097152000,$temp_dir='/home/tmp/'){
   //调用split命令进行切割
   //split -b200 --verbose rubygems-1.8.25.zip rg/rg1
   if(filesize($localfile)<=$sbyte){
