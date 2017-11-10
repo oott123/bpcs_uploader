@@ -131,11 +131,11 @@ case 'uploadbig':
   case 3:	//参数数目不够
     echon('Missing parameters. Please check again.');
     die(9099);
-  case 4:	//设置默认值（单个文件大小->1G）
-    $argv[4] = 1073741824;
+  case 4:	//设置默认值（单个文件大小->2G）
+    $argv[4] = 2097152000;
     //因为需要继续下面的操作所以这里没有break
-  case 5:	//设置默认值（临时文件目录->/tmp/）
-    $argv[5] = '/tmp/';
+  case 5:	//设置默认值（临时文件目录->/home/tmp/）
+    $argv[5] = '/home/tmp/';
     //因为需要继续下面的操作所以这里没有break
   default:	//开始上传操作
     super_file($access_token,$argv[3],$argv[2],'newcopy',$argv[4],$argv[5]);
