@@ -177,7 +177,7 @@ function decode($argv, $access_token) {
   $path = '/apps/' . urlencode(file_get_contents(CONFIG_DIR . '/appname') . '/' . $argv[3]);
   $url = "https://pcs.baidu.com/rest/2.0/pcs/file";
   $para = "method=list&access_token=" . $access_token . "&path=" . $path;
-  $output = do_api($url, $para, GET);
+  $output = do_api($url, $para, 'GET');
   $decode_result = json_decode($output); //解码json
   foreach ($decode_result->list as $i) {
     if ($i->isdir == 0/*如果是文件的话*/) {
@@ -197,9 +197,7 @@ function decode($argv, $access_token) {
 
 function md5check($argv2, $argv4) {
   if (is_file($argv2)) {
-    $a = 'md5sum "' . $argv2 . '"';
-    cmd($a, true);
-    // TODO: Where is $r?
+    $r = md5_file($argv2);
     if ($r == $argv4) {
       echon("--" . date("Y-m-d") . " " . date("h:i:sa") . "-- local file's MD5 is " . $r . ",the remote flie's MD5 is " . $argv4 . ",they are equal,so no need to download.", false, 32);
       return TRUE;
