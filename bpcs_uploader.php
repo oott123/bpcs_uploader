@@ -78,11 +78,11 @@ switch ($argv[1]) {
     $path = '/apps/' . urlencode(file_get_contents(CONFIG_DIR . '/appname') . '/' . $argv[3]);
 
     if ($argv[4] == NULL) { //$argv[4]是远程文件的MD5
-      $cmd = 'wget -t0 -c --no-check-certificate -O "' . $argv[2] . '" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token=' . $access_token . '&path=' . $path . '"';
+      $cmd = 'wget -t0 -c --user-agent="Mozilla/5.0" --no-check-certificate -O "' . $argv[2] . '" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token=' . $access_token . '&path=' . $path . '"';
       cmd($cmd);
     } else {
       while (md5check($argv[2], $argv[4]) == false) {
-        $cmd = 'wget -c -t0 --no-check-certificate -O "' . $argv[2] . '" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token=' . $access_token . '&path=' . $path . '"';
+        $cmd = 'wget -c -t0 --user-agent="Mozilla/5.0" --no-check-certificate -O "' . $argv[2] . '" "https://d.pcs.baidu.com/rest/2.0/pcs/file?method=download&access_token=' . $access_token . '&path=' . $path . '"';
         cmd($cmd);
       }
     }

@@ -95,9 +95,9 @@ function cmd($cfe, $ispopen = false) {
 }
 function do_api($url, $param, $method = 'POST') {
 	if ($method == 'POST') {
-		$cmd = "curl -X POST -k -L --data \"$param\" \"$url\"";
+		$cmd = "curl -X POST -k -L -H \"User-Agent: Mozilla/5.0\" --data \"$param\" \"$url\"";
 	} else {
-		$cmd = "curl -X $method -k -L \"$url?$param\"";
+		$cmd = "curl -X $method -k -L -H \"User-Agent: Mozilla/5.0\" \"$url?$param\"";
 	}
 
 	return cmd($cmd);
